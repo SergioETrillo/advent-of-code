@@ -19,10 +19,13 @@ http://adventofcode.com/day/2/input
 
 class WrappingPaper
 
-  attr_reader :gift_measures
+    FILE = "day2/day2.txt"
 
-    def main()
-      gift_measures = get_raw_data("day2/day2.txt")
+    def initialize()
+      @gift_measures ||= get_raw_data(FILE)
+    end
+
+    def calculate_wrap()
       paper_needed = 0
       gift_measures.each do |gift_box|
         measure = extract_box_dimension(gift_box)
@@ -30,6 +33,19 @@ class WrappingPaper
       end
       paper_needed
     end
+
+    def calc_ribbon()
+      ribbon_needed = 0
+      gift_measures.each do |gift_box|
+        measure = extract_box_dimension(gift_box)
+        ribbon_needed += calculate_ribbon_length(measure)
+      end
+      ribbon_needed
+    end
+
+    private
+
+    attr_reader :gift_measures
 
     def get_raw_data(file)
       data = File.read(file)
@@ -42,11 +58,32 @@ class WrappingPaper
     end
 
     def calculate_wrap_per_paper(dimensions)
-      l = dimensions[0]
-      w = dimensions[1]
-      h = dimensions[2]
-      dimensions.sort!
-      2*l*w + 2*w*h + 2*h*l + dimensions[0]*dimensions[1]
+      l, w, h = dimensions
+      calculate_paper_strict(l,w,h) + calculate_paper_slack(dimensions)
     end
+
+    def calculate_paper_strict(l,w,h)
+      2*l*w + 2*w*h + 2*h*l
+    end
+
+    def calculate_paper_slack(dimensions)
+      dimensions.sort!
+      dimensions[0] * dimensions[1]
+    end
+
+    def calculate_ribbon_length(dimensions)
+      calculate_ribbon_wrap(dimensions) + calculate_bow_length(dimensions)
+    end
+
+    def calculate_ribbon_wrap(dimensions)
+      dimensions.sort!
+      2*(dimensions[0] + dimensions[1])
+    end
+
+    def calculate_bow_length(dimensions)
+      l, w, h = dimensions
+      l*w*h
+    end
+
 end
 

@@ -13,6 +13,18 @@ class CountHouses
     add_house(current_house)
   end
 
+  def count_houses(path)
+    path.chars.each do |move|
+      process_symbol(move)
+      add_house(current_house) unless (gifted_homes.include?(current_house))
+    end
+    houses
+  end
+
+  private
+
+  attr_reader :gifted_homes, :current_house
+
   def process_symbol(symbol)
     case symbol
     when "^"
@@ -32,17 +44,22 @@ class CountHouses
     gifted_homes << coordinate.dup
     @houses += 1
   end
+end
 
-  def count_houses(path)
-    path.chars.each do |move|
-      process_symbol(move)
-      add_house(current_house) unless (gifted_homes.include?(current_house))
+
+=begin
+
+require 'benchmark'
+
+  MEASUREMENT PERFORMANCE OF PROGRAM
+
+  def measure_time(path)
+    time = Benchmark.realtime do
+      result = count_houses(path)
+      puts "Result: #{result}"
     end
-    houses
+    puts "Time elapsed: #{time} seconds"
   end
 
 
-  private
-
-  attr_reader :gifted_homes, :current_house
-end
+=end

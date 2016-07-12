@@ -29,6 +29,23 @@ To begin, get your puzzle input.
 
 =end
 
+BASEMENT = -1
+
 def count_symbols(entry, up, down)
-  entry.count(up) - s.count(down)
+  entry.count(up) - entry.count(down)
+end
+
+def in_basement(entry)
+  floor = 0
+  moves = entry.chars
+  for i in 0..moves.length-1
+    floor += process_symbol(moves[i])
+    return i+1 if floor == BASEMENT
+  end
+  "Santa did not pass for the basement"
+end
+
+def process_symbol(s)
+  return 1 if s == "("
+  return -1 if s == ")"
 end
