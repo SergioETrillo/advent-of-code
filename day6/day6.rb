@@ -3,8 +3,8 @@ class Day6
   attr_reader = :lighted
 
   def initialize
-    @lighted = 0
     @grid = Array.new(1000) {Array.new(1000,0)}
+    @lighted = 0
   end
 
   def get_raw_data
@@ -12,38 +12,48 @@ class Day6
     lines = data.split("\n")
   end
 
+  def calculate_lights(lines)
+    lines.each do |line|
+      instruction = get_instruction(line)
+      update_grid(instruction)
+    end
+    sum(@grid)
+  end
+
   def get_instruction(line)
     words = line.split(/\W+/)
     if words.count == 6
       result = { command: words[0],
-                 x_beg: words[1].to_i, y_beg: words[2].to_i,
-                 x_end: words[4].to_i, y_end: words[5].to_i }
-    else
+       x_beg: words[1].to_i, y_beg: words[2].to_i,
+       x_end: words[4].to_i, y_end: words[5].to_i }
+     else
       result = { command: words[1],
-                 x_beg: words[2].to_i, y_beg: words[3].to_i,
-                 x_end: words[5].to_i, y_end: words[6].to_i }
+       x_beg: words[2].to_i, y_beg: words[3].to_i,
+       x_end: words[5].to_i, y_end: words[6].to_i }
+     end
+   end
+
+   private
+
+   def update_grid(instruction)
+    command = instruction[:command]
+    for i in instruction[:x_beg]..instruction[:x_end]
+      for j in instruction[:y_beg]..instruction[:y_end]
+        process_command(command,i,j)
+      end
     end
   end
 
-  def execute_line(line)
-    case line[:command]
+  def process_command(command,i,j)
+    case command
     when "toggle"
-      process_toggle(line)
+      @grid[i][j] == 1 ? @grid[i][j] = 0 : @grid[i][j] = 1
     when "on"
-      process_on(line)
+      @grid[i][j] = 1
     when "off"
-      process_off(line)
+      @grid[i][j] = 0
     else
-      raise "error in line instructions"
-  end
-
-  private
-
-  def process_toggle(line)
-    for i in line[:x_beg]..line[:x_end]
-      for j in line[:y_beg]..line[:y_end]
-        @grid[i][j] == 1 ? @grid[i][j] = 0 : @grid[i][j] = 1
-      end
+      raise "command error"
     end
   end
 
