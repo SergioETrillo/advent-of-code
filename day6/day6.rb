@@ -39,7 +39,7 @@ class Day6
     command = instruction[:command]
     for i in instruction[:x_beg]..instruction[:x_end]
       for j in instruction[:y_beg]..instruction[:y_end]
-        process_command(command,i,j)
+        process_command2(command,i,j)
       end
     end
   end
@@ -52,6 +52,19 @@ class Day6
       @grid[i][j] = 1
     when "off"
       @grid[i][j] = 0
+    else
+      raise "command error"
+    end
+  end
+
+  def process_command2(command,i,j)
+    case command
+    when "toggle"
+      @grid[i][j] += 2
+    when "on"
+      @grid[i][j] += 1
+    when "off"
+      @grid[i][j] >=1 ? @grid[i][j]-= 1 : 0
     else
       raise "command error"
     end
