@@ -63,17 +63,25 @@ class Day7
   def process_logic_function(ary)
     result = ""
     if ary[0] == "NOT"
-      result = (2**16 + ~lines[ary[1]])
+      p "ary[1]: #{lines[ary[1]]}"
+      result = _not(lines[ary[1]])
     else
       result = and_or_rlshift(ary)
     end
     result
   end
 
+  def _not(number)
+    (2**16 + ~number)
+  end
+
   def and_or_rlshift(ary)
     result = ""
     value1, logic_function, value2  = provide_ops_values(ary)
+    calc_logic(value1,logic_function,value2)
+  end
 
+  def calc_logic(value1,logic_function,value2)
     case logic_function
     when "AND"
       result = value1 & value2

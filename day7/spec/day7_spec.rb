@@ -66,10 +66,7 @@ describe Day7 do
       d7.sort_file
       d7.trim
       d7.convert_to_hash
-      lv_val, lm_val, io_val = d7.lines["lv"], d7.lines["lm"], d7.lines["io"]
-      entry1 = ["lv","LSHIFT","15"]
-      entry2 = ["1","AND","io"]
-      entry3 = ["lm","OR","lv"]
+
     end
 
     it "differentiates between nums and strings" do
@@ -78,14 +75,29 @@ describe Day7 do
     end
 
     it "provides right operand values" do
-
+      lv_val, lm_val, io_val = d7.lines["lv"], d7.lines["lm"], d7.lines["io"]
+      entry1 = ["lv","LSHIFT","15"]
+      entry2 = ["1","AND","io"]
+      entry3 = ["lm","OR","lv"]
       expect(d7.provide_ops_values(entry1)).to eq [lv_val, "LSHIFT", 15]
       expect(d7.provide_ops_values(entry2)).to eq [1, "AND", io_val]
       expect(d7.provide_ops_values(entry3)).to eq [lm_val, "OR", lv_val]
     end
 
     it "makes the binary operations" do
-      expect(and_or_rlshift(entry1))
+      x = 123
+      y = 456
+      expect(d7.calc_logic(x,"AND",y)).to eq 72
+      expect(d7.calc_logic(x,"OR",y)).to eq 507
+      expect(d7.calc_logic(x,"LSHIFT",2)).to eq 492
+      expect(d7.calc_logic(y,"RSHIFT",2)).to eq 114
+    end
+
+    it "calculates NOT operations" do
+      x = 123
+      not_x = 65412
+      ary = ["NOT", "b"]
+      expect(d7._not(x)).to eq not_x
     end
   end
 end
