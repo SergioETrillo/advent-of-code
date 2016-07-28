@@ -3,8 +3,8 @@ class Day7
   attr_accessor :lines
 
   def initialize
-    # data = File.read("lib/input.txt")
-    data = File.read("spec/test.txt")
+    data = File.read("lib/input2.txt")
+    # data = File.read("spec/test.txt")
     @lines = data.split("\n")
   end
 
@@ -31,10 +31,12 @@ class Day7
 
   def process_signals
     result_key, result_value = lines.first
+    p "result_value: #{result_value}"
     lines.delete(result_key)
     lines.each do |key,value|
       process_instruction(key,value)
-      return lines[result_key] if lines[result_key].is_a? Fixnum
+      p "result: #{lines[result_value]}"
+      return lines[result_value] if lines[result_value].is_a? Fixnum
     end
   end
 
@@ -51,29 +53,40 @@ class Day7
   def process_logic_function(ary)
     result = ""
     if ary[0] == "NOT"
-      result = (2^16 - ~lines[ary[1]])
+      result = (2**16 + ~lines[ary[1]])
     else
       result = and_or_rlshift(ary)
     end
     result
   end
 
-  def and_or_rlshfit(ary)
+  def and_or_rlshift(ary)
     result = ""
-    operator1, logic_function, operator2  = ary
+    value1, logic_function, value2  = provide_ops_values(ary)
 
     case logic_function
     when "AND"
-      result = lines[operator1] & lines[operator2]
+      result = value1 & value2
     when "OR"
-      result = lines[operator1] | lines[operator2]
+      result = value1 | value2
     when "RSHIFT"
-      result = lines[operator1] >> operator2.to_i
+      result = value1 >> value2
     when "LSHIFT"
-      result = lines[operator1] << operator2.to_i
+      result = value1 << value2
     else
       raise "error"
     end
     result
+  end
+
+  def provide_ops_values(ary)
+    operator1, logic_function, operator2  = ary
+    value1, value2 = select_value(operator1), select_value(operator2)
+    [value1, logic_function, value2]
+  end
+
+  def select_value(op)
+    regex_nb = /^[0-9]+$/
+    value = regex_nb =~ op ? op.to_i : lines[op]
   end
 end
