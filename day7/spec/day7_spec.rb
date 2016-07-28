@@ -58,7 +58,34 @@ describe Day7 do
       expect(d7.lines).to be_instance_of(Hash)
       expect(d7.lines.first).to eq [" ls", "lf AND lq "]
     end
+  end
 
+  context "processing operations" do
+    before do
+      d7.reverse_data
+      d7.sort_file
+      d7.trim
+      d7.convert_to_hash
+      lv_val, lm_val, io_val = d7.lines["lv"], d7.lines["lm"], d7.lines["io"]
+      entry1 = ["lv","LSHIFT","15"]
+      entry2 = ["1","AND","io"]
+      entry3 = ["lm","OR","lv"]
+    end
 
+    it "differentiates between nums and strings" do
+      expect(d7.select_value("1")).to eq 1
+      expect(d7.select_value(d7.lines.first[0])).to eq d7.lines.first[1]
+    end
+
+    it "provides right operand values" do
+
+      expect(d7.provide_ops_values(entry1)).to eq [lv_val, "LSHIFT", 15]
+      expect(d7.provide_ops_values(entry2)).to eq [1, "AND", io_val]
+      expect(d7.provide_ops_values(entry3)).to eq [lm_val, "OR", lv_val]
+    end
+
+    it "makes the binary operations" do
+      expect(and_or_rlshift(entry1))
+    end
   end
 end

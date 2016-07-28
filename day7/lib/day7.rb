@@ -3,10 +3,22 @@ class Day7
   attr_accessor :lines
 
   def initialize
-    data = File.read("lib/input2.txt")
-    # data = File.read("spec/test.txt")
+    data = File.read("lib/input.txt")
     @lines = data.split("\n")
   end
+
+  def calculate_result
+    reverse_data
+    sort_file
+    trim
+    convert_to_hash
+    result = process_signals
+  end
+
+  def print_result
+    puts "result is: #{calculate_result}"
+  end
+
 
   def reverse_data
     @lines.map! { |line| reverse(line) }
@@ -31,11 +43,9 @@ class Day7
 
   def process_signals
     result_key, result_value = lines.first
-    p "result_value: #{result_value}"
     lines.delete(result_key)
     lines.each do |key,value|
       process_instruction(key,value)
-      p "result: #{lines[result_value]}"
       return lines[result_value] if lines[result_value].is_a? Fixnum
     end
   end
