@@ -1,4 +1,4 @@
-class Day7
+class LogicCalculator
 
   attr_accessor :lines
 
@@ -63,7 +63,6 @@ class Day7
   def process_logic_function(ary)
     result = ""
     if ary[0] == "NOT"
-      p "ary[1]: #{lines[ary[1]]}"
       result = _not(lines[ary[1]])
     else
       result = and_or_rlshift(ary)
