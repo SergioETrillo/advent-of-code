@@ -25,3 +25,5 @@ class CountChars
     escaped
   end
 end
+
+# each_char and check if "\"" if "\\" or if "\x" then check if next to chars are hexa, if those then add the relevant number of chars to the "literal"
