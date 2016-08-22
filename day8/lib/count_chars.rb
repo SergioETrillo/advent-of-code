@@ -13,17 +13,20 @@ class CountChars
 
   def calc_string_literal
     literal = 0
-    list_strings.each { |row| literal += row.length}
+    list_strings.each do |row|
+      row.chomp!
+      literal += row.length
+    end
     literal
   end
 
   def calc_string_escaped
     escaped = 0
     list_strings.each do |row|
-      row.each_char { |c| escaped += 1 }
+      row = row[1..-2]
+      row = row.gsub(/\\x[a-fA-F0-9]{2}/, '\'').gsub(/\\"/, '"').gsub(/\\\\/, '\\')
+      escaped += row.length - 2
     end
     escaped
   end
 end
-
-# each_char and check if "\"" if "\\" or if "\x" then check if next to chars are hexa, if those then add the relevant number of chars to the "literal"
